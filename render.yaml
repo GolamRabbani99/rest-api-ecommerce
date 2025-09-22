@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: django-ecommerce-api
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn my_api_project.wsgi:application --bind 0.0.0.0 --timeout 600"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ecommerce_db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 1
+      - key: STRIPE_SECRET_KEY
+        value: # Replace with your actual Stripe secret key
+  - type: postgres
+    name: ecommerce_db
+    env: postgres
