@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,13 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-     'rest_framework',
+    'rest_framework',
 'rest_framework.authtoken',
 'products.apps.ProductsConfig',
 'orders.apps.OrdersConfig',
 'users.apps.UsersConfig',
 'cart',
- 'django_filters',
+'django_filters',
 ]
 
 REST_FRAMEWORK = {
@@ -139,15 +141,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# In settings.py
-
+# --- Production settings ---
 ALLOWED_HOSTS = ['*']
-
-# ... (rest of your settings)
-
-# Add this to the bottom of the file
-import os
-import dj_database_url
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
 if DATABASE_URL:
@@ -155,7 +150,8 @@ if DATABASE_URL:
         'default': dj_database_url.parse(DATABASE_URL)
     }
 
-# Security settings for production
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# Only apply these settings if not in DEBUG mode
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
